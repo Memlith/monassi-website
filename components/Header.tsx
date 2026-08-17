@@ -21,10 +21,7 @@ export default function Header() {
     { label: "Diferenciais", href: "/#diferenciais" },
     { label: "Projetos", href: "/#projetos" },
     { label: "Galeria", href: "/galeria" },
-    { label: "Antes & Depois", href: "/#antes-depois" },
-    { label: "Como Funciona", href: "/#processo" },
     { label: "Depoimentos", href: "/#depoimentos" },
-    { label: "Dúvidas", href: "/#duvidas" },
   ];
 
   const whatsappUrl =
