@@ -1,65 +1,50 @@
-# 🪵 Monassi Móveis Planejados — Website & Galeria de Alta Conversão
+# 🪵 Monassi Móveis Planejados — Website, Galeria & Catálogo MDF 2026
 
-Landing page moderna, responsiva e de alta performance desenvolvida para a **Monassi Móveis Planejados**, marcenaria 2.0 de alto padrão com atendimento em **Indaiatuba, Salto e Itu – SP**.
-
-O projeto é um **rework completo** planejado do zero com foco em conversão de leads para WhatsApp, valorização estética dos ambientes planejados e experiência do usuário refinada (estilo editorial).
+Plataforma web moderna, responsiva e de alta conversão desenvolvida para a **Monassi Móveis Planejados**, referência em **Marcenaria 2.0** de alto padrão com atendimento exclusivo em **Indaiatuba, Salto e Itu – SP**.
 
 ---
 
-## 🤖 Desenvolvimento Assistido por Inteligência Artificial (Google Gemini)
+## ✨ Destaques do Projeto
 
-Este projeto foi concebido e estruturado com o auxílio do ecossistema de **Inteligência Artificial Google Gemini**, que atuou no desenvolvimento de ponta a ponta:
-- **Planejamento Arquitetural**: Definição do framework de 11 elementos essenciais de conversão e elaboração do design system (tipografia, espaçamento e paleta de cores nobre).
-- **Geração de Componentes e Código**: Escrita de componentes modulares em React / Next.js 14+, TypeScript e Tailwind CSS.
-- **Otimização de SEO e Acessibilidade**: Semântica HTML5, metadados OpenGraph para compartilhamento social e padronização de imagens em *kebab-case semântico*.
-- **Criação da Galeria Interativa**: Interface inspirada no design dos apps Fotos do iPhone e Google Photos com navegação fluida por teclado e modais imersivos.
-
----
-
-## 🚀 Tecnologias e Ferramentas
-
-- **[Next.js 14+](https://nextjs.org/)** (App Router) — Renderização estática ultrarrápida (SSG) e roteamento moderno.
-- **[TypeScript](https://www.typescriptlang.org/)** — Tipagem estática e segurança de código.
-- **[Tailwind CSS](https://tailwindcss.com/)** — Estilização utilitária com tokens personalizados.
-- **[Lucide React](https://lucide.dev/)** — Conjunto de ícones leves e elegantes.
-- **[Google Fonts](https://fonts.google.com/)**:
-  - `Fraunces`: Tipografia serifada de alto impacto para títulos (estética artesanal/editorial).
-  - `Plus Jakarta Sans`: Sans-serif limpa para corpo de texto e legibilidade em qualquer dispositivo.
+- **Marcenaria 2.0 de Precisão Industrial**: Fluxo completo unindo projeto 3D personalizado, envio do plano de corte via **CorteCloud** (para fornecedores industriais como *CrieCorte, Gasômetro e Leo Madeiras*), retirada das chapas usinadas e montagem especializada própria.
+- **Galeria de Móveis com Carrosséis Multi-Fotos (`/galeria`)**: **24 projetos reais** (134 fotos em formato `.webp` de alta definição) incluindo obras do acervo oficial e carrosséis do Instagram (`@monassiplanejados`), filtros por ambiente, visualização ampla/compacta, lightbox com navegação por teclado e compartilhamento direto por link (`/galeria?projeto=id`).
+- **Catálogo Interativo de Madeiras & MDF Duratex 2026 (`/catalogo`)**: Portfólio digital completo com os **80 padrões oficiais Duratex 2026**, alternância entre *Textura da Chapa* e *Ambiente Decorado em 3D*, filtros por linha (*Madeiras Nobres, Contemporâneas, Naturais, Unicolores, Alto Brilho Cristallo, Super Matte Acetinatta, Pedras & Metalizados e Ultra Resistente à Umidade*) e envio direto do padrão escolhido para o simulador de orçamento (`/?mdf=...#orcamento`).
+- **Simulador de Orçamento Integrado ao WhatsApp & Cloud Firestore**: Captura estruturada do ambiente, cidade atendida (*Indaiatuba, Salto ou Itu*), prazo e padrão de MDF, abrindo o WhatsApp sem bloqueio de pop-up no iOS/Safari e gravando o lead no **Firebase Cloud Firestore**.
+- **Firebase Analytics (GA4) + Painel Administrativo (`/admin`)**: Rastreamento automático de `page_view` e eventos de conversão (`whatsapp_click`, `cta_click`, `lead_submit`, `gallery_project_open`, `catalog_pattern_open`, `catalog_select_for_quote`) no Google Analytics e em tempo real no painel `/admin` protegido por **Firebase Authentication (Google)** e **Firestore Security Rules** (`firestore.rules`).
+- **Pipeline Automático WebP + Testes + CI/CD**: Script com `sharp` que converte e comprime todas as 369 imagens de `public/img/` para `.webp` (**redução de 58,3% no peso das imagens**), suíte de testes automatizada (`npm test`), hook de `pre-commit` local e workflow **GitHub Actions** (`.github/workflows/ci.yml`).
 
 ---
 
-## 📐 Estrutura do Projeto & Páginas
+## 🚀 Tecnologias Utilizadas
 
-### 1. Página Inicial (`/`)
-Projetada com base no framework de **11 Elementos Essenciais de Conversão**:
-1. **Header Fixo**: Logo em alta definição com efeito de desfoque (*backdrop-blur*) e menu responsivo.
-2. **Hero Section**: Headline marcante, selos de confiança, métricas (+10 anos de experiência) e CTA principal.
-3. **Diferenciais da Marcenaria**: Grid com 6 pilares (100% MDF, ferragens com amortecimento, projeto 3D, Marcenaria 2.0 com CorteCloud, pontualidade e garantia).
-4. **Destaques do Portfólio**: 3 projetos em destaque com card de ação direta para a galeria completa.
-5. **Antes & Depois Interativo**: Comparador deslizante em tempo real demonstrando a transformação de ambientes.
-6. **Passo a Passo (Como Funciona)**: 4 etapas claras desde o primeiro contato até a entrega e montagem.
-7. **Simulador de Orçamento (Lead Form)**: Formulário visual onde o cliente seleciona o cômodo e o prazo, gerando uma mensagem personalizada pronta para o WhatsApp.
-8. **Depoimentos de Clientes**: Avaliações 5 estrelas de clientes reais da região de Indaiatuba.
-9. **Perguntas Frequentes (FAQ)**: Acordeão interativo para sanar dúvidas sobre prazos, custos e regiões atendidas.
-10. **CTA Final**: Chamada de alto impacto para solicitação de orçamento.
-11. **Rodapé & Floating WhatsApp**: Informações completas de contato, horários, mapa e botão flutuante de atendimento rápido.
+- **[Next.js 16.3](https://nextjs.org/)** (App Router + Turbopack) — Renderização estática (SSG), metadados por rota, `sitemap.xml` e `robots.txt` nativos.
+- **[React 19](https://react.dev/) & [TypeScript 5](https://www.typescriptlang.org/)** — Tipagem estática rigorosa de ponta a ponta.
+- **[Tailwind CSS v4](https://tailwindcss.com/)** — Design system editorial (`#1C1917` Espresso, `#FAF8F5` Off-White e `#C28839` Bronze/Ouro).
+- **[Firebase Web SDK v13](https://firebase.google.com/)** — Cloud Firestore (`leads` e `analytics_events`), Firebase Authentication e Google Analytics 4.
+- **[Sharp](https://sharp.pixelplumbing.com/)** — Conversão e compressão automatizada de imagens para `.webp`.
+- **[Lucide React](https://lucide.dev/)** & **Google Fonts** (`Fraunces` + `Plus Jakarta Sans`).
 
-### 2. Galeria Completa (`/galeria`)
-Página dedicada inspirada nos aplicativos **Apple Photos** e **Google Photos**:
-- Alternador de visualização (**Grid Compacto** vs. **Grid Amplo**).
-- Filtros por ambiente (*Todas as Fotos*, *Cozinhas & Gourmet*, *Salas & Painéis*, *Comercial & Clínicas*, *Antes & Depois*).
-- Visualizador em tela cheia (*Lightbox*) com navegação por toque e pelas **setas do teclado** (`←` e `→`).
-- Ficha técnica de cada foto com materiais, ferragens e botão direto de orçamento para o projeto visualizado.
+---
+
+## 📐 Rotas e Páginas da Aplicação
+
+| Rota | Descrição |
+| :--- | :--- |
+| **`/`** | Landing Page completa (Hero, Diferenciais Marcenaria 2.0, 6 Destaques do Portfólio com carrossel, Prévia do Catálogo MDF com 8 abas, Antes & Depois interativo, Passo a Passo, Simulador de Orçamento, Depoimentos, FAQ com Schema JSON-LD e CTA Final). |
+| **`/galeria`** | Galeria completa com 24 projetos entregues e 134 fotos em carrossel, filtros por categoria, busca visual e link compartilhável por móvel (`?projeto=id`). |
+| **`/catalogo`** | Catálogo interativo com os 80 padrões de MDF Duratex 2026, busca instantânea, filtros *Lançamentos 2026* e *Ultra (Resistente à Umidade)*, visualização de chapa vs. ambiente 3D e sugestões de combinação. |
+| **`/admin`** | Dashboard em tempo real conectado ao projeto Firebase `monassi-planejados-web` para gestão de leads (`novo`, `em_atendimento`, `concluido`) e auditoria de cliques. |
+| **`/sitemap.xml` & `/robots.txt`** | Gerados automaticamente via App Router (`app/sitemap.ts` e `app/robots.ts`), indexando as páginas públicas e ocultando `/admin`. |
 
 ---
 
 ## 🛠️ Como Executar Localmente
 
 ### Pré-requisitos
-- Node.js 18+ ou 20+ (recomendado Node 20+)
-- npm, yarn ou pnpm
+- **Node.js 24+**
+- **npm 10+**
 
-### Instalação
+### Instalação e Execução
 
 1. Clone o repositório:
 ```bash
@@ -67,9 +52,10 @@ git clone git@github.com:Memlith/monassi-website.git
 cd monassi-website
 ```
 
-2. Instale as dependências:
+2. Instale as dependências e ative o hook de pre-commit:
 ```bash
 npm install
+git config core.hooksPath .githooks
 ```
 
 3. Inicie o servidor de desenvolvimento:
@@ -78,57 +64,84 @@ npm run dev
 ```
 
 4. Acesse no navegador:
-- **Site Principal**: [http://localhost:3000](http://localhost:3000)
-- **Galeria de Fotos**: [http://localhost:3000/galeria](http://localhost:3000/galeria)
-
-### Build de Produção
-
-Para validar a compilação e gerar o bundle de produção estático:
-```bash
-npm run build
-```
+- **Página Inicial**: [http://localhost:3000](http://localhost:3000)
+- **Galeria de Móveis**: [http://localhost:3000/galeria](http://localhost:3000/galeria)
+- **Catálogo de Madeiras MDF**: [http://localhost:3000/catalogo](http://localhost:3000/catalogo)
+- **Painel Admin / Analytics**: [http://localhost:3000/admin](http://localhost:3000/admin)
 
 ---
 
-## 📁 Organização de Pastas
+## 🧪 Scripts, Otimizador WebP, Pre-Commit & CI/CD
+
+| Comando | O que faz |
+| :--- | :--- |
+| `npm run dev` | Inicia o servidor Next.js em modo de desenvolvimento. |
+| `npm run optimize:images` | Converte qualquer imagem `.jpg`/`.jpeg`/`.png` em `public/img/` para `.webp` otimizado e atualiza automaticamente as referências no código. |
+| `npm test` | Executa a suíte de verificação (`scripts/test-suite.mjs`): ESLint, TypeScript, formato `.webp` das 369 imagens, integridade dos 80 padrões do catálogo, 134 fotos da galeria e regras do Firestore. |
+| `npm run build` | Gera o build otimizado de produção do Next.js. |
+| `npm run precommit` | Executa em sequência `npm run optimize:images && npm test && npm run build` (rodado automaticamente pelo Git antes de cada commit via `.githooks/pre-commit`). |
+
+No GitHub, o workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) executa as mesmas validações em cada `push` ou `pull_request` na branch `main`.
+
+---
+
+## 📁 Estrutura de Pastas
 
 ```text
 monassi-website/
+├── .github/workflows/
+│   └── ci.yml                       # Pipeline CI/CD no GitHub Actions (Node 24)
+├── .githooks/
+│   └── pre-commit                   # Hook pre-commit (WebP + Test + Build)
 ├── app/
+│   ├── admin/page.tsx               # Painel de Leads e Eventos (Firebase Firestore)
+│   ├── catalogo/
+│   │   ├── layout.tsx               # Metadata SEO do Catálogo MDF
+│   │   └── page.tsx                 # Catálogo interativo Duratex 2026 (80 padrões)
 │   ├── galeria/
-│   │   └── page.tsx         # Página dedicada da galeria interativa
-│   ├── favicon.ico
-│   ├── globals.css          # Estilos globais e tokens de cores
-│   ├── layout.tsx           # Layout raiz com fontes e SEO
-│   └── page.tsx             # Página inicial (Landing Page)
+│   │   ├── layout.tsx               # Metadata SEO da Galeria
+│   │   └── page.tsx                 # Galeria completa de projetos e carrosséis
+│   ├── favicon.ico & icon.png       # Ícones da marca Monassi
+│   ├── globals.css                  # Tokens Tailwind CSS v4 e utilitários
+│   ├── layout.tsx                   # RootLayout + Schema LocalBusiness + Analytics
+│   ├── not-found.tsx                # Página 404 personalizada
+│   ├── page.tsx                     # Home Page (13 seções)
+│   ├── robots.ts                    # Geração de /robots.txt
+│   └── sitemap.ts                   # Geração de /sitemap.xml
 ├── components/
-│   ├── BeforeAfter.tsx      # Comparador antes e depois
-│   ├── FAQ.tsx              # Acordeão de perguntas frequentes
-│   ├── Features.tsx         # Diferenciais da marcenaria
-│   ├── FinalCTA.tsx         # Seção de conversão final
-│   ├── FloatingWhatsApp.tsx # Botão flutuante de WhatsApp
-│   ├── Footer.tsx           # Rodapé institucional
-│   ├── Gallery.tsx          # Seção de projetos da home
-│   ├── Header.tsx           # Cabeçalho e navegação
-│   ├── Hero.tsx             # Seção principal de apresentação
-│   ├── LeadForm.tsx         # Simulador de orçamento para WhatsApp
-│   ├── Process.tsx          # Passo a passo do atendimento
-│   └── Testimonials.tsx     # Avaliações de clientes
-├── public/
-│   └── img/                 # Imagens em kebab-case descritivo
-├── package.json
-└── README.md
+│   ├── BeforeAfter.tsx              # Slider interativo Antes & Depois
+│   ├── FAQ.tsx                      # Perguntas frequentes + Schema FAQPage
+│   ├── Features.tsx                 # Diferenciais da Marcenaria 2.0
+│   ├── FinalCTA.tsx                 # Chamada de conversão final
+│   ├── FirebaseAnalyticsInit.tsx    # Inicialização GA4 e rastreamento de rotas
+│   ├── FloatingWhatsApp.tsx         # Botão flutuante de WhatsApp
+│   ├── Footer.tsx                   # Rodapé institucional
+│   ├── Gallery.tsx                  # 6 projetos em destaque na Home
+│   ├── Header.tsx                   # Navegação principal fixa
+│   ├── Hero.tsx                     # Hero section com proposta de valor
+│   ├── LeadForm.tsx                 # Simulador de orçamento + gravação Firestore
+│   ├── Process.tsx                  # As 4 etapas da Marcenaria 2.0
+│   ├── Testimonials.tsx             # Seção de depoimentos
+│   └── WoodCatalogPreview.tsx       # Amostra do catálogo MDF na Home (8 categorias)
+├── lib/
+│   ├── analytics.ts                 # Funções trackClick() e saveLead()
+│   ├── catalog-data.json            # Base de dados dos 80 padrões Duratex 2026
+│   ├── catalog-data.ts              # Tipagens e filtros do catálogo MDF
+│   ├── firebase.ts                  # Configuração Firebase App, Auth, Firestore e Analytics
+│   └── projects-data.ts             # Base de dados dos 24 projetos (134 fotos)
+├── public/img/                      # 369 imagens otimizadas em .webp (acervo, instagram, catálogo, logos)
+├── scripts/
+│   ├── optimize-images.mjs          # Conversor e compressor automático para WebP
+│   └── test-suite.mjs               # Suíte de testes de integridade e qualidade
+├── firebase.json                    # Configuração do projeto Firebase
+├── firestore.indexes.json           # Índices do Cloud Firestore
+└── firestore.rules                  # Regras de segurança do Cloud Firestore
 ```
 
 ---
 
-## 📍 Sobre a Empresa
+## 📍 Sobre a Monassi Móveis Planejados
 
-- **Nome**: Monassi Móveis Planejados
-- **Localização**: Indaiatuba, São Paulo – Brasil
+- **Atendimento Exclusivo**: Indaiatuba, Salto e Itu – SP
 - **WhatsApp**: [(19) 99443-2077](https://wa.me/5519994432077)
 - **Instagram**: [@monassiplanejados](https://www.instagram.com/monassiplanejados/)
-
----
-
-Desenvolvido com excelência técnica e design refinado sob medida.
