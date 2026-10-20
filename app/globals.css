@@ -71,6 +71,15 @@
   animation: floatSmooth 4s ease-in-out infinite;
 }
 
+/* Hide scrollbar for horizontal filter bars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Custom subtle scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

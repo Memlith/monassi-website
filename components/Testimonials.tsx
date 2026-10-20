@@ -21,9 +21,9 @@ export default function Testimonials() {
     {
       name: "Lucas Fernandes",
       role: "Arquiteto e Designer de Interiores",
-      location: "Campinas & Região",
+      location: "Itu & Salto - SP",
       image: "LF",
-      text: "Como arquiteto, prezo muito pelo rigor técnico e pelo acabamento fino das bordas e ferragens. A Monassi executa meus projetos com fidelidade milimétrica. São parceiros de confiança.",
+      text: "Como arquiteto, prezo muito pelo rigor técnico e pelo acabamento fino das bordas e ferragens. Com o processo de Marcenaria 2.0, a Monassi executa meus projetos com fidelidade milimétrica. São parceiros de confiança.",
       project: "Parceria Corporativa & Residencial",
     },
     {

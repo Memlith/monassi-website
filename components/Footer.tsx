@@ -31,14 +31,15 @@ export default function Footer() {
           <div className="space-y-4">
             <div className="relative h-12 w-44">
               <Image
-                src="/img/logo-monassi-white.png"
+                src="/img/logo-monassi-v2-white.webp"
                 alt="Monassi Móveis Planejados"
                 fill
+                unoptimized
                 className="object-contain"
               />
             </div>
             <p className="text-stone-400 text-sm leading-relaxed font-light">
-              Marcenaria de alto padrão sob medida. Transformamos cada ambiente em um espaço único, sofisticado e repleto de personalidade em Indaiatuba e região.
+              Marcenaria 2.0 de alto padrão sob medida. Transformamos cada ambiente em um espaço único, sofisticado e repleto de personalidade em Indaiatuba, Salto e Itu.
             </p>
             <div className="flex items-center gap-3 pt-2">
               <a
@@ -89,6 +90,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/catalogo" className="hover:text-[#C28839] transition-colors">
+                  Catálogo de Madeiras MDF (2026)
+                </Link>
+              </li>
+              <li>
                 <Link href="/#antes-depois" className="hover:text-[#C28839] transition-colors">
                   Antes & Depois
                 </Link>
@@ -126,7 +132,7 @@ export default function Footer() {
                   className="hover:text-[#C28839] transition-colors"
                 >
                   Indaiatuba, São Paulo - SP
-                  <span className="block text-xs text-stone-500">Atendemos toda a região</span>
+                  <span className="block text-xs text-stone-500">Atendemos Indaiatuba, Salto e Itu</span>
                 </a>
               </li>
               <li className="flex items-start gap-3">
@@ -186,7 +192,7 @@ export default function Footer() {
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500">
           <p>© {currentYear} Monassi Móveis Planejados. Todos os direitos reservados.</p>
           <div className="flex items-center gap-6">
-            <span>Marcenaria em Indaiatuba / SP</span>
+            <span>Indaiatuba, Salto e Itu / SP</span>
             <Link
               href="#"
               className="hover:text-stone-300 flex items-center gap-1 transition-colors"

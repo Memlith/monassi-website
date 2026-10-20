@@ -10,17 +10,22 @@ export default function FAQ() {
     {
       question: "Qual região a Monassi Móveis Planejados atende?",
       answer:
-        "Atendemos prioritariamente toda a cidade de Indaiatuba, além de Salto, Itu, Campinas, Valinhos, Vinhedo e demais municípios da região metropolitana de Campinas e interior de SP.",
+        "Atendemos exclusivamente as cidades de Indaiatuba, Salto e Itu. Esse foco regional garante agilidade nas visitas técnicas, pontualidade na montagem e assistência próxima de você.",
+    },
+    {
+      question: "Como funciona o modelo de Marcenaria 2.0 da Monassi?",
+      answer:
+        "Na Marcenaria 2.0, nós elaboramos todo o seu projeto sob medida e enviamos as medidas de cada chapa, quantidades e especificações de fitas de borda pelo sistema CorteCloud para empresas especializadas (como CrieCorte, Gasômetro, Leo Madeiras, etc.). Eles executam o corte e a fitagem com precisão industrial, nós retiramos as peças no fornecedor e realizamos toda a montagem dos seus móveis.",
     },
     {
       question: "O orçamento e o projeto 3D têm algum custo?",
       answer:
-        "Não! O orçamento inicial e a consultoria para o seu espaço são 100% gratuitos e sem compromisso. Você pode nos enviar a planta baixa pelo WhatsApp ou agendar uma medição técnica no seu imóvel.",
+        "Não! O orçamento inicial e a consultoria para o seu espaço são 100% gratuitos e sem compromisso. Você pode nos enviar a planta baixa pelo WhatsApp ou agendar uma medição técnica no seu imóvel em Indaiatuba, Salto ou Itu.",
     },
     {
       question: "Quais materiais e ferragens são utilizados?",
       answer:
-        "Trabalhamos exclusivamente com chapas de 100% MDF de alta densidade das melhores marcas do mercado (Guararapes, Duratex, Arauco) e ferragens de alta durabilidade com amortecimento (sistema slow-motion) que evitam pancadas em portas e gavetas.",
+        "Trabalhamos exclusivamente com chapas de 100% MDF de alta densidade das melhores marcas do mercado (Guararapes, Duratex, Arauco) e ferragens de alta durabilidade com amortecimento (sistema slow-motion) que evitam impactos em portas e gavetas.",
     },
     {
       question: "Qual é o prazo de entrega e montagem dos móveis?",
@@ -39,12 +44,29 @@ export default function FAQ() {
     },
   ];
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  };
+
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
   return (
     <section id="duvidas" className="py-24 bg-[#FAF8F5] relative">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">

@@ -1,0 +1,165 @@
+rules_version = '2';
+
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// This security rules file assumes the following data structures:
+//
+// Collection: leads
+// Document ID: auto-generated
+// Fields:
+//   - name: string (required, 2..100 chars) - Client full name (PII)
+//   - phone: string (optional, 0..30 chars) - Client WhatsApp/phone (PII)
+//   - city: string (required, enum: ['Indaiatuba', 'Salto', 'Itu']) - Service city
+//   - room: string (required, 2..80 chars) - Target furniture environment
+//   - mdfPattern: string (optional, 0..80 chars) - Selected Duratex MDF pattern
+//   - timing: string (required, 2..60 chars) - Project timeline preference
+//   - source: string (required, 2..60 chars, immutable) - Form origin identifier
+//   - status: string (required, enum: ['novo', 'em_atendimento', 'concluido']) - Lead workflow status
+//   - createdAt: timestamp (required, immutable, must equal request.time on create) - Creation timestamp
+//
+// Collection: analytics_events
+// Document ID: auto-generated
+// Fields:
+//   - event: string (required, 2..60 chars, immutable) - Event type (e.g., 'cta_click', 'whatsapp_click', 'catalog_view')
+//   - label: string (required, 1..120 chars, immutable) - Button or element label
+//   - section: string (required, 1..80 chars, immutable) - Page section identifier
+//   - path: string (required, 1..120 chars, immutable) - URL pathname
+//   - mdfPattern: string (optional, 0..80 chars, immutable) - Optional MDF pattern name
+//   - createdAt: timestamp (required, immutable, must equal request.time on create) - Event timestamp
+//
+// ===============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        request.auth.token.email != null &&
+        request.auth.token.email_verified == true &&
+        request.auth.token.email == 'iamcaiosimonassi@gmail.com';
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function uidUnchanged() {
+      return !('uid' in request.resource.data) ||
+        request.resource.data.uid == request.auth.uid;
+    }
+
+    function uidNotModified() {
+      return !('uid' in request.resource.data) ||
+        request.resource.data.uid == resource.data.uid;
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function validStringLength(field, minLen, maxLen) {
+      return request.resource.data[field] is string &&
+        request.resource.data[field].size() >= minLen &&
+        request.resource.data[field].size() <= maxLen;
+    }
+
+    function isValidOptionalString(field, minLen, maxLen) {
+      return !(field in request.resource.data) ||
+        (request.resource.data[field] is string &&
+         request.resource.data[field].size() >= minLen &&
+         request.resource.data[field].size() <= maxLen);
+    }
+
+    function areImmutableFieldsUnchanged(fields) {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(fields);
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    function isValidLead(data) {
+      let requiredFields = ['name', 'city', 'room', 'timing', 'source', 'status', 'createdAt'];
+      let allowedFields = ['name', 'phone', 'city', 'room', 'mdfPattern', 'timing', 'source', 'status', 'createdAt'];
+      let allowedCities = ['Indaiatuba', 'Salto', 'Itu'];
+      let allowedStatuses = ['novo', 'em_atendimento', 'concluido'];
+
+      return hasRequiredFields(requiredFields) &&
+        hasOnlyAllowedFields(allowedFields) &&
+        validStringLength('name', 2, 100) &&
+        isValidOptionalString('phone', 0, 30) &&
+        data.city is string && data.city in allowedCities &&
+        validStringLength('room', 2, 80) &&
+        isValidOptionalString('mdfPattern', 0, 80) &&
+        validStringLength('timing', 2, 60) &&
+        validStringLength('source', 2, 60) &&
+        data.status is string && data.status in allowedStatuses &&
+        data.createdAt is timestamp;
+    }
+
+    function isValidAnalyticsEvent(data) {
+      let requiredFields = ['event', 'label', 'section', 'path', 'createdAt'];
+      let allowedFields = ['event', 'label', 'section', 'path', 'mdfPattern', 'createdAt'];
+
+      return hasRequiredFields(requiredFields) &&
+        hasOnlyAllowedFields(allowedFields) &&
+        validStringLength('event', 2, 60) &&
+        validStringLength('label', 1, 120) &&
+        validStringLength('section', 1, 80) &&
+        validStringLength('path', 1, 120) &&
+        isValidOptionalString('mdfPattern', 0, 80) &&
+        data.createdAt is timestamp;
+    }
+
+    // ===============================================================
+    // Collection Rules
+    // ===============================================================
+
+    match /leads/{leadId} {
+      // Visitors can submit budget simulation leads with strict schema & timestamp validation
+      allow create: if isValidLead(request.resource.data) &&
+        request.resource.data.status == 'novo' &&
+        request.resource.data.createdAt == request.time;
+
+      // Only the authenticated stakeholder admin can read or manage PII leads
+      allow read: if isAdmin();
+
+      allow update: if isAdmin() &&
+        isValidLead(request.resource.data) &&
+        areImmutableFieldsUnchanged(['createdAt', 'source']);
+
+      allow delete: if isAdmin();
+    }
+
+    match /analytics_events/{eventId} {
+      // Visitors can log non-PII click events with strict schema & timestamp validation
+      allow create: if isValidAnalyticsEvent(request.resource.data) &&
+        request.resource.data.createdAt == request.time;
+
+      // Only the authenticated stakeholder admin can read analytics events
+      allow read: if isAdmin();
+
+      // Analytics events are append-only immutable logs
+      allow update, delete: if false;
+    }
+
+    // Default deny all other paths
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,5 +1,9 @@
+"use client";
+
 import Image from "next/image";
-import { MessageCircle, ArrowRight, ShieldCheck, Sparkles, CheckCircle2, Star } from "lucide-react";
+import Link from "next/link";
+import { MessageCircle, ArrowRight, ShieldCheck, Sparkles, CheckCircle2, Star, Layers } from "lucide-react";
+import { trackClick } from "@/lib/analytics";
 
 export default function Hero() {
   const whatsappUrl =
@@ -10,7 +14,7 @@ export default function Hero() {
       {/* Background Image with Ambient Gradient Overlay */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/img/hero-bg-marcenaria.png"
+          src="/img/hero-bg-marcenaria.webp"
           alt="Monassi Móveis Planejados Hero Background"
           fill
           className="object-cover object-center opacity-30 mix-blend-luminosity scale-105 transition-transform duration-1000"
@@ -24,17 +28,17 @@ export default function Hero() {
         {/* Badge */}
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-stone-800/80 border border-[#C28839]/40 text-[#F3ECE2] text-xs sm:text-sm font-medium mb-6 backdrop-blur-md animate-fade-in shadow-inner">
           <Sparkles className="w-3.5 h-3.5 text-[#C28839]" />
-          <span>Marcenaria de Alto Padrão em Indaiatuba & Região</span>
+          <span>Marcenaria 2.0 de Alto Padrão em Indaiatuba, Salto e Itu</span>
         </div>
 
         {/* Main Headline */}
-        <h1 className="text-3.5xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-bold tracking-tight text-[#FAF8F5] leading-[1.12] max-w-4xl mb-6">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-bold tracking-tight text-[#FAF8F5] leading-[1.12] max-w-4xl mb-6">
           Móveis planejados que <span className="italic font-normal text-[#C28839]">transformam</span> o seu espaço em arte.
         </h1>
 
         {/* Subtitle */}
         <p className="text-base sm:text-lg md:text-xl text-stone-300 max-w-2xl font-light leading-relaxed mb-8 sm:mb-10">
-          Unimos matérias-primas nobres, tecnologia de ponta e o cuidado artesanal para criar ambientes sob medida únicos, funcionais e sofisticados.
+          Unimos projeto 3D personalizado, precisão industrial da Marcenaria 2.0 (CorteCloud) e montagem especializada para criar ambientes sob medida em Indaiatuba, Salto e Itu.
         </p>
 
         {/* CTA Buttons */}
@@ -43,6 +47,13 @@ export default function Hero() {
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() =>
+              void trackClick({
+                event: "whatsapp_click",
+                label: "Solicitar Orçamento Grátis (Hero)",
+                section: "hero",
+              })
+            }
             className="w-full sm:w-auto bg-[#C28839] hover:bg-[#A77129] text-white font-semibold text-base sm:text-lg px-8 py-4 rounded-full flex items-center justify-center gap-3 shadow-xl hover:shadow-[#C28839]/25 hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 group animate-pulse-glow"
           >
             <MessageCircle className="w-5 h-5 fill-current" />
@@ -50,12 +61,20 @@ export default function Hero() {
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </a>
 
-          <a
-            href="#projetos"
-            className="w-full sm:w-auto bg-stone-900/80 hover:bg-stone-800 text-stone-200 hover:text-white font-medium text-base px-7 py-4 rounded-full border border-stone-700/80 hover:border-stone-500 transition-all duration-200"
+          <Link
+            href="/catalogo"
+            onClick={() =>
+              void trackClick({
+                event: "cta_click",
+                label: "Catálogo de Madeiras MDF (Hero)",
+                section: "hero",
+              })
+            }
+            className="w-full sm:w-auto bg-stone-900/80 hover:bg-stone-800 text-stone-200 hover:text-white font-medium text-base px-7 py-4 rounded-full border border-stone-700/80 hover:border-[#C28839] transition-all duration-200 flex items-center justify-center gap-2"
           >
-            Ver Projetos Realizados
-          </a>
+            <Layers className="w-4 h-4 text-[#C28839]" />
+            <span>Catálogo de Madeiras MDF</span>
+          </Link>
         </div>
 
         {/* Trust Badges Minimal List */}

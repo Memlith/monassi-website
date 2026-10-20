@@ -1,6 +1,6 @@
 # 🪵 Monassi Móveis Planejados — Website & Galeria de Alta Conversão
 
-Landing page moderna, responsiva e de alta performance desenvolvida para a **Monassi Móveis Planejados**, marcenaria de alto padrão localizada em Indaiatuba – SP.
+Landing page moderna, responsiva e de alta performance desenvolvida para a **Monassi Móveis Planejados**, marcenaria 2.0 de alto padrão com atendimento em **Indaiatuba, Salto e Itu – SP**.
 
 O projeto é um **rework completo** planejado do zero com foco em conversão de leads para WhatsApp, valorização estética dos ambientes planejados e experiência do usuário refinada (estilo editorial).
 
@@ -34,7 +34,7 @@ Este projeto foi concebido e estruturado com o auxílio do ecossistema de **Inte
 Projetada com base no framework de **11 Elementos Essenciais de Conversão**:
 1. **Header Fixo**: Logo em alta definição com efeito de desfoque (*backdrop-blur*) e menu responsivo.
 2. **Hero Section**: Headline marcante, selos de confiança, métricas (+10 anos de experiência) e CTA principal.
-3. **Diferenciais da Marcenaria**: Grid com 6 pilares (100% MDF, ferragens com amortecimento, projeto 3D, fabricação própria, pontualidade e garantia).
+3. **Diferenciais da Marcenaria**: Grid com 6 pilares (100% MDF, ferragens com amortecimento, projeto 3D, Marcenaria 2.0 com CorteCloud, pontualidade e garantia).
 4. **Destaques do Portfólio**: 3 projetos em destaque com card de ação direta para a galeria completa.
 5. **Antes & Depois Interativo**: Comparador deslizante em tempo real demonstrando a transformação de ambientes.
 6. **Passo a Passo (Como Funciona)**: 4 etapas claras desde o primeiro contato até a entrega e montagem.

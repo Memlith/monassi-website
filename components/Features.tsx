@@ -22,21 +22,21 @@ export default function Features() {
     },
     {
       icon: <Award className="w-6 h-6 text-[#C28839]" />,
-      title: "Fabricação Própria",
+      title: "Marcenaria 2.0",
       description:
-        "Marceneiros especializados com máquinas de precisão. Acabamentos de borda milimétricos e controle de qualidade peça por peça.",
+        "Nós projetamos e enviamos as medidas de cada chapa, quantidades e fitas de borda via CorteCloud para empresas especializadas (CrieCorte, Gasômetro, Leo Madeiras, etc.) que executam o corte e a fitagem com precisão industrial. Retiramos as peças no fornecedor e montamos seus móveis.",
     },
     {
       icon: <Clock className="w-6 h-6 text-[#C28839]" />,
       title: "Pontualidade em Contrato",
       description:
-        "Respeitamos rigorosamente os prazos acordados. Do início da produção à montagem final, seu cronograma é nossa prioridade.",
+        "Respeitamos rigorosamente os prazos acordados. Do pedido das chapas à montagem final, seu cronograma é nossa prioridade.",
     },
     {
       icon: <ShieldCheck className="w-6 h-6 text-[#C28839]" />,
       title: "Garantia e Pós-Venda",
       description:
-        "Suporte direto de marcenaria local em Indaiatuba. Garantia de fabricação e assistência rápida para o que você precisar.",
+        "Atendimento dedicado para Indaiatuba, Salto e Itu. Garantia de execução e montagem com assistência rápida para o que você precisar.",
     },
   ];
 

@@ -1,4 +1,7 @@
+"use client";
+
 import { MessageCircle, ArrowRight, Sparkles, CheckCircle2, ShieldCheck } from "lucide-react";
+import { trackClick } from "@/lib/analytics";
 
 export default function FinalCTA() {
   const whatsappUrl =
@@ -29,6 +32,13 @@ export default function FinalCTA() {
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() =>
+              void trackClick({
+                event: "whatsapp_click",
+                label: "Falar com a Monassi no WhatsApp (Final CTA)",
+                section: "final_cta",
+              })
+            }
             className="w-full bg-[#C28839] hover:bg-[#A77129] text-white font-semibold text-lg py-5 px-8 rounded-full flex items-center justify-center gap-3 shadow-2xl hover:shadow-[#C28839]/30 hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 group"
           >
             <MessageCircle className="w-6 h-6 fill-current" />

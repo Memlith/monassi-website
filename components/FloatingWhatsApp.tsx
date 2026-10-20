@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { MessageCircle, X } from "lucide-react";
+import { trackClick } from "@/lib/analytics";
 
 export default function FloatingWhatsApp() {
   const [showTooltip, setShowTooltip] = useState(true);
@@ -30,6 +31,13 @@ export default function FloatingWhatsApp() {
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() =>
+          void trackClick({
+            event: "whatsapp_click",
+            label: "Botão Flutuante WhatsApp",
+            section: "floating_whatsapp",
+          })
+        }
         className="w-14 h-14 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white flex items-center justify-center shadow-2xl hover:shadow-[#25D366]/40 transition-all duration-300 hover:scale-110 active:scale-95 pointer-events-auto group relative animate-pulse-glow"
         aria-label="Falar no WhatsApp"
       >

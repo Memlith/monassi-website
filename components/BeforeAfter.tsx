@@ -26,6 +26,16 @@ export default function BeforeAfter() {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      setSliderPosition((prev) => Math.max(0, prev - 5));
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      setSliderPosition((prev) => Math.min(100, prev + 5));
+    }
+  };
+
   return (
     <section id="antes-depois" className="py-24 bg-[#1C1917] text-white relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -48,43 +58,48 @@ export default function BeforeAfter() {
           {/* Interactive Slider */}
           <div className="lg:col-span-7">
             <div
-              className="relative h-[380px] sm:h-[460px] md:h-[500px] w-full rounded-3xl overflow-hidden shadow-2xl border border-stone-700 cursor-ew-resize select-none"
+              role="slider"
+              tabIndex={0}
+              aria-label="Comparador antes e depois da marcenaria"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.round(sliderPosition)}
+              className="relative h-[380px] sm:h-[460px] md:h-[500px] w-full rounded-3xl overflow-hidden shadow-2xl border border-stone-700 cursor-ew-resize select-none focus:outline-none focus:ring-2 focus:ring-[#C28839]"
               onMouseDown={() => setIsDragging(true)}
               onMouseUp={() => setIsDragging(false)}
               onMouseLeave={() => setIsDragging(false)}
               onMouseMove={handleMouseMove}
               onTouchMove={handleTouchMove}
+              onKeyDown={handleKeyDown}
             >
               {/* After Image (Full background) */}
               <div className="absolute inset-0">
                 <Image
-                  src="/img/transformacao-cozinha-depois.jpg"
+                  src="/img/transformacao-cozinha-depois.webp"
                   alt="Depois: Gabinete de Cozinha Planejado Monassi"
                   fill
+                  sizes="(max-width: 1024px) 100vw, 58vw"
                   className="object-cover"
-                  priority
                 />
                 <div className="absolute top-4 right-4 bg-[#C28839] text-white text-xs font-bold uppercase px-3 py-1.5 rounded-full shadow-lg">
                   Depois (Monassi)
                 </div>
               </div>
 
-              {/* Before Image (Clipped by slider position) */}
+              {/* Before Image (Clipped with clip-path so aspect ratio matches 100% on any screen) */}
               <div
-                className="absolute inset-0 overflow-hidden"
-                style={{ width: `${sliderPosition}%` }}
+                className="absolute inset-0"
+                style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
               >
-                <div className="relative h-full w-[1000px] max-w-none">
-                  <Image
-                    src="/img/transformacao-cozinha-antes.jpg"
-                    alt="Antes da transformação"
-                    fill
-                    className="object-cover"
-                    priority
-                  />
-                  <div className="absolute top-4 left-4 bg-stone-900/90 text-stone-200 text-xs font-bold uppercase px-3 py-1.5 rounded-full backdrop-blur-md shadow-lg">
-                    Antes
-                  </div>
+                <Image
+                  src="/img/transformacao-cozinha-antes.webp"
+                  alt="Antes da transformação"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 58vw"
+                  className="object-cover"
+                />
+                <div className="absolute top-4 left-4 bg-stone-900/90 text-stone-200 text-xs font-bold uppercase px-3 py-1.5 rounded-full backdrop-blur-md shadow-lg">
+                  Antes
                 </div>
               </div>
 

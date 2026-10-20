@@ -19,16 +19,16 @@ export default function Process() {
     {
       number: "03",
       icon: <Hammer className="w-6 h-6 text-[#C28839]" />,
-      title: "Fabricação Artesanal",
+      title: "Marcenaria 2.0 (Corte & Fitagem)",
       description:
-        "Produção própria na nossa marcenaria com corte de precisão, fitamento milimétrico e ferragens premium com amortecimento.",
+        "Projetamos e enviamos as medidas de cada chapa, quantidade e fitas de borda pelo CorteCloud para empresas especializadas (CrieCorte, Gasômetro, Leo Madeiras, etc.), que executam o corte e a fitagem com máxima precisão.",
     },
     {
       number: "04",
       icon: <CheckCheck className="w-6 h-6 text-[#C28839]" />,
-      title: "Montagem & Entrega",
+      title: "Retirada & Montagem",
       description:
-        "Nossa equipe própria realiza uma montagem limpa, ágil e pontual. Seu espaço entregue impecável e pronto para uso.",
+        "Retiramos as peças prontas diretamente no fornecedor e realizamos a montagem dos seus móveis com acabamento impecável, limpeza e pontualidade.",
     },
   ];
 

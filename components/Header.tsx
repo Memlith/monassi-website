@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { MessageCircle, Menu, X, Phone } from "lucide-react";
+import { trackClick } from "@/lib/analytics";
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -21,6 +22,7 @@ export default function Header() {
     { label: "Diferenciais", href: "/#diferenciais" },
     { label: "Projetos", href: "/#projetos" },
     { label: "Galeria", href: "/galeria" },
+    { label: "Catálogo MDF", href: "/catalogo" },
     { label: "Depoimentos", href: "/#depoimentos" },
   ];
 
@@ -40,9 +42,10 @@ export default function Header() {
         <Link href="#" className="flex items-center gap-2 group">
           <div className="relative h-10 w-36 sm:h-12 sm:w-44 transition-transform duration-300 group-hover:scale-[1.02]">
             <Image
-              src="/img/logo-monassi-white.png"
+              src="/img/logo-monassi-v2-white.webp"
               alt="Monassi Móveis Planejados"
               fill
+              unoptimized
               className="object-contain"
               priority
             />
@@ -76,6 +79,13 @@ export default function Header() {
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() =>
+              void trackClick({
+                event: "whatsapp_click",
+                label: "Pedir Orçamento (Header)",
+                section: "header",
+              })
+            }
             className="bg-[#C28839] hover:bg-[#A77129] text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-full flex items-center gap-2 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.03] active:scale-[0.98]"
           >
             <MessageCircle className="w-4 h-4 fill-current" />

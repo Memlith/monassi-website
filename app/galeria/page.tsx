@@ -14,522 +14,585 @@ import {
   Grid,
   LayoutGrid,
   MapPin,
-  Calendar,
   Share2,
   Check,
-  Phone,
+  Images,
+  CheckCircle2,
 } from "lucide-react";
-
-interface GalleryItem {
-  id: number;
-  title: string;
-  category: "cozinha" | "sala" | "comercial" | "transformacao";
-  categoryLabel: string;
-  image: string;
-  location: string;
-  year: string;
-  materials: string;
-  description: string;
-  details: string[];
-}
+import {
+  PROJECTS_DATA,
+  PROJECT_CATEGORIES,
+  type ProjectItem,
+} from "@/lib/projects-data";
+import { trackClick } from "@/lib/analytics";
 
 export default function GaleriaPage() {
-  const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [activeCategory, setActiveCategory] = useState<string>("Todos");
   const [gridSize, setGridSize] = useState<"compact" | "large">("large");
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [cardSlideIndex, setCardSlideIndex] = useState<Record<string, number>>({});
+  const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(() => {
+    if (typeof window === "undefined") return null;
+    const pid = new URLSearchParams(window.location.search).get("projeto");
+    return pid ? PROJECTS_DATA.find((p) => p.id === pid) || null : null;
+  });
+  const [modalSlideIndex, setModalSlideIndex] = useState<number>(0);
   const [copied, setCopied] = useState(false);
 
-  const galleryItems: GalleryItem[] = [
-    {
-      id: 1,
-      title: "Espaço Gourmet com Coifa Ripada & Churrasqueira",
-      category: "cozinha",
-      categoryLabel: "Cozinhas & Gourmet",
-      image: "/img/cozinha-gourmet-churrasqueira.jpg",
-      location: "Indaiatuba - SP",
-      year: "2025",
-      materials: "100% MDF Fendi & Amadeirado, Ferragens com Amortecimento",
-      description:
-        "Projeto planejado completo para área gourmet com armários aéreos, torre para geladeira, adega/colmeia de garrafas e revestimento ripado integrado sobre a coifa da churrasqueira.",
-      details: [
-        "Torre para refrigerador com nicho superior",
-        "Adega colmeia embutida",
-        "Coifa decorativa com painel ripado sob medida",
-        "Puxadores ocultos em perfil de alumínio",
-      ],
-    },
-    {
-      id: 2,
-      title: "Living Integrado & Painel de TV com Estante",
-      category: "sala",
-      categoryLabel: "Salas & Living",
-      image: "/img/living-painel-tv-estante.jpg",
-      location: "Indaiatuba - SP",
-      year: "2025",
-      materials: "MDF Amadeirado Claro, Laca Branca e Espelho Bisotado",
-      description:
-        "Painel de TV sob medida para sala de estar com estante lateral vertical para livros e decoração, prateleira superior para plantas, nichos organizadores e detalhe ripado com espelho.",
-      details: [
-        "Estante vertical com 5 nichos decorativos",
-        "Prateleira superior para plantas e iluminação",
-        "Painel com passagem oculta para fios e cabos",
-        "Espelho integrado e acabamento ripado fino",
-      ],
-    },
-    {
-      id: 3,
-      title: "Recepção de Clínica Odontológica (Eccel Odonto)",
-      category: "comercial",
-      categoryLabel: "Comercial & Clínicas",
-      image: "/img/comercial-consultorio-recepcao.jpg",
-      location: "Indaiatuba - SP",
-      year: "2024",
-      materials: "MDF Cinza Claro, Granito Branco e Painel Cimento Queimado",
-      description:
-        "Recepção planejada para clínica odontológica com balcão de atendimento sob medida com tampo duplo, painel de fundo com logotipo e móvel auxiliar de apoio com portas de correr.",
-      details: [
-        "Balcão de atendimento ergonômico",
-        "Móvel auxiliar para impressoras e arquivos",
-        "Painel de recepção preparado para fixação de TV",
-        "Fácil higienização e alta durabilidade",
-      ],
-    },
-    {
-      id: 4,
-      title: "Painel Amadeirado Inteiriço com Porta Mimetizada & LED",
-      category: "sala",
-      categoryLabel: "Salas & Painéis",
-      image: "/img/living-painel-porta-mimetizada-led.jpg",
-      location: "Indaiatuba - SP",
-      year: "2024",
-      materials: "100% MDF Amadeirado Freijó com Perfil LED Embutido",
-      description:
-        "Revestimento de parede inteiriço em padrão amadeirado nobre com porta de passagem oculta (mimetizada) e rasgo com iluminação indireta em fita LED quente.",
-      details: [
-        "Porta de passagem invisível (mimetizada na madeira)",
-        "Iluminação indireta suave em fita LED",
-        "Acabamento contínuo sem emendas aparentes",
-        "Sensação de amplitude e acolhimento",
-      ],
-    },
-    {
-      id: 5,
-      title: "Cozinha & Buffet Suspenso com Nicho de Eletros",
-      category: "cozinha",
-      categoryLabel: "Cozinhas & Gourmet",
-      image: "/img/cozinha-armario-aereo-bancada.jpg",
-      location: "Indaiatuba - SP",
-      year: "2024",
-      materials: "MDF Amadeirado & Branco Tx, Corrediças Telescópicas",
-      description:
-        "Composição de armários aéreos em tom amadeirado com nicho para micro-ondas e bancada ampla com 4 gavetões brancos reforçados com amortecimento slow-motion.",
-      details: [
-        "Nicho integrado para micro-ondas",
-        "Gavetões com corrediças telescópicas reforçadas",
-        "Portas superiores com pistão a gás",
-        "Tamponamento superior amadeirado",
-      ],
-    },
-    {
-      id: 6,
-      title: "Gabinete de Cozinha Sob Medida com Puxadores Perfil",
-      category: "transformacao",
-      categoryLabel: "Antes & Depois / Cozinhas",
-      image: "/img/transformacao-cozinha-depois.jpg",
-      location: "Indaiatuba - SP",
-      year: "2025",
-      materials: "100% MDF Branco Ultra Resistente à Umidade",
-      description:
-        "Gabinete de cozinha sob medida instalado sob bancada de granito preto, com portas de armário, gaveteiros para talheres e panelas, e puxadores em perfil de alumínio anodizado.",
-      details: [
-        "Aproveitamento de 100% do vão inferior da pia",
-        "Puxadores em perfil de alumínio embutido",
-        "Pés com regulagem de nível e vedação",
-        "Dobradiças com sistema de amortecimento",
-      ],
-    },
-    {
-      id: 7,
-      title: "Ambiente Antes da Transformação (Medição Técnica)",
-      category: "transformacao",
-      categoryLabel: "Antes & Depois",
-      image: "/img/transformacao-cozinha-antes.jpg",
-      location: "Indaiatuba - SP",
-      year: "2025",
-      materials: "Visita Técnica e Medição a Laser",
-      description:
-        "Registro do ambiente original antes da execução dos móveis, com medição técnica para conferência milimétrica das instalações hidráulicas e elétricas.",
-      details: [
-        "Medição a laser no local",
-        "Conferência de pontos de água, esgoto e gás",
-        "Planejamento estrutural das divisórias",
-        "Garantia de encaixe perfeito",
-      ],
-    },
-  ];
+  const filteredProjects =
+    activeCategory === "Todos"
+      ? PROJECTS_DATA
+      : PROJECTS_DATA.filter((item) => item.category === activeCategory);
 
-  const categories = [
-    { id: "all", label: "Todas as Fotos" },
-    { id: "cozinha", label: "Cozinhas & Gourmet" },
-    { id: "sala", label: "Salas & Painéis" },
-    { id: "comercial", label: "Comercial & Clínicas" },
-    { id: "transformacao", label: "Antes & Depois" },
-  ];
+  const getCardSlide = (projectId: string) => cardSlideIndex[projectId] ?? 0;
 
-  const filteredItems =
-    activeCategory === "all"
-      ? galleryItems
-      : galleryItems.filter((item) => item.category === activeCategory);
+  const stepCardSlide = (
+    e: React.MouseEvent,
+    project: ProjectItem,
+    delta: number
+  ) => {
+    e.stopPropagation();
+    const total = project.slides.length;
+    const current = getCardSlide(project.id);
+    const next = (current + delta + total) % total;
+    setCardSlideIndex((prev) => ({ ...prev, [project.id]: next }));
+    void trackClick({
+      event: "gallery_carousel_step",
+      label: `${project.title} (${next + 1}/${total})`,
+      section: "full_gallery",
+    });
+  };
 
-  // Keyboard navigation for Lightbox
+  const openModal = (project: ProjectItem) => {
+    const startSlide = getCardSlide(project.id);
+    setSelectedProject(project);
+    setModalSlideIndex(startSlide);
+    void trackClick({
+      event: "gallery_project_open",
+      label: project.title,
+      section: "full_gallery",
+    });
+  };
+
+  const stepModalSlide = (delta: number) => {
+    if (!selectedProject) return;
+    const total = selectedProject.slides.length;
+    setModalSlideIndex((prev) => (prev + delta + total) % total);
+  };
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (selectedIndex === null) return;
-      if (e.key === "Escape") setSelectedIndex(null);
-      if (e.key === "ArrowLeft") {
-        setSelectedIndex((prev) =>
-          prev !== null && prev > 0 ? prev - 1 : filteredItems.length - 1
-        );
-      }
-      if (e.key === "ArrowRight") {
-        setSelectedIndex((prev) =>
-          prev !== null && prev < filteredItems.length - 1 ? prev + 1 : 0
-        );
+      if (!selectedProject) return;
+      if (e.key === "Escape") setSelectedProject(null);
+      if (selectedProject.slides.length > 1) {
+        if (e.key === "ArrowRight") {
+          setModalSlideIndex((prev) => (prev + 1) % selectedProject.slides.length);
+        }
+        if (e.key === "ArrowLeft") {
+          setModalSlideIndex(
+            (prev) =>
+              (prev - 1 + selectedProject.slides.length) %
+              selectedProject.slides.length
+          );
+        }
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedIndex, filteredItems.length]);
+  }, [selectedProject]);
 
   const handleShare = () => {
     if (typeof window !== "undefined") {
-      navigator.clipboard.writeText(window.location.href);
+      const shareUrl = selectedProject
+        ? `${window.location.origin}/galeria?projeto=${encodeURIComponent(selectedProject.id)}`
+        : window.location.href;
+      navigator.clipboard.writeText(shareUrl);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
+      setTimeout(() => setCopied(false), 2000);
     }
   };
 
-  const selectedItem =
-    selectedIndex !== null ? filteredItems[selectedIndex] : null;
-
   return (
-    <div className="min-h-screen bg-[#FAF8F5] text-[#1C1917] flex flex-col selection:bg-[#C28839]/20 selection:text-[#8C5814]">
-      {/* Apple/Google Photos Style Sticky Header */}
-      <header className="sticky top-0 z-40 bg-[#1C1917]/95 backdrop-blur-md border-b border-stone-800 text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
+    <div className="min-h-screen bg-[#FAF8F5] text-[#1C1917] flex flex-col">
+      {/* Sticky Top App Bar (No MDF catalog button) */}
+      <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-xl border-b border-[#E6DFD5] shadow-xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-stone-300 hover:text-white text-xs sm:text-sm font-medium px-3 py-1.5 rounded-full bg-stone-800/80 hover:bg-stone-700 transition-colors"
+              className="inline-flex items-center gap-2 text-sm font-medium text-stone-600 hover:text-[#1C1917] bg-stone-100 hover:bg-stone-200/70 px-3.5 py-2 rounded-full transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>Início</span>
+              <span className="hidden sm:inline">Voltar ao Início</span>
             </Link>
-
-            <div className="flex items-center gap-2">
-              <span className="font-serif font-bold text-lg sm:text-xl text-[#FAF8F5]">
-                Galeria de Fotos
-              </span>
-              <span className="hidden sm:inline-block text-[11px] bg-[#C28839] text-white font-semibold px-2.5 py-0.5 rounded-full">
-                {filteredItems.length} Fotos
-              </span>
-            </div>
+            <div className="h-6 w-[1px] bg-stone-200 hidden sm:block" />
+            <Link href="/" className="flex items-center gap-2">
+              <div className="relative w-32 h-9">
+                <Image
+                  src="/img/logo-monassi-v2-dark.webp"
+                  alt="Monassi Móveis Planejados"
+                  fill
+                  unoptimized
+                  className="object-contain object-left"
+                />
+              </div>
+            </Link>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3">
-            {/* Grid density toggle */}
-            <div className="hidden sm:flex items-center bg-stone-800/80 rounded-full p-1 border border-stone-700">
+          <div className="flex items-center gap-2.5">
+            <div className="hidden sm:flex items-center bg-stone-100 p-1 rounded-full border border-stone-200">
               <button
-                onClick={() => setGridSize("compact")}
-                className={`p-1.5 rounded-full transition-colors cursor-pointer ${
-                  gridSize === "compact"
-                    ? "bg-[#C28839] text-white"
-                    : "text-stone-400 hover:text-white"
-                }`}
-                title="Visualização Compacta"
-              >
-                <Grid className="w-4 h-4" />
-              </button>
-              <button
+                type="button"
                 onClick={() => setGridSize("large")}
                 className={`p-1.5 rounded-full transition-colors cursor-pointer ${
                   gridSize === "large"
-                    ? "bg-[#C28839] text-white"
-                    : "text-stone-400 hover:text-white"
+                    ? "bg-white text-[#1C1917] shadow-xs"
+                    : "text-stone-500 hover:text-stone-800"
                 }`}
-                title="Visualização Ampla"
+                title="Grade Ampla"
               >
                 <LayoutGrid className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setGridSize("compact")}
+                className={`p-1.5 rounded-full transition-colors cursor-pointer ${
+                  gridSize === "compact"
+                    ? "bg-white text-[#1C1917] shadow-xs"
+                    : "text-stone-500 hover:text-stone-800"
+                }`}
+                title="Grade Compacta"
+              >
+                <Grid className="w-4 h-4" />
               </button>
             </div>
 
             <a
-              href="https://wa.me/5519994432077?text=Ol%C3%A1!%20Estou%20vendo%20a%20galeria%20de%20fotos%20no%20site%20da%20Monassi%20e%20gostaria%20de%20um%20or%C3%A7amento."
+              href="https://wa.me/5519994432077?text=Ol%C3%A1!%20Estou%20vendo%20a%20galeria%20de%20projetos%20da%20Monassi%20e%20gostaria%20de%20um%20or%C3%A7amento."
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-[#C28839] hover:bg-[#A77129] text-white text-xs sm:text-sm font-semibold px-4 py-2 rounded-full flex items-center gap-1.5 shadow-md hover:scale-105 transition-all"
+              onClick={() =>
+                void trackClick({
+                  event: "whatsapp_click",
+                  label: "Orçar Projeto (Topo Galeria)",
+                  section: "full_gallery_header",
+                })
+              }
+              className="bg-[#C28839] hover:bg-[#A77129] text-white px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold flex items-center gap-2 shadow-sm transition-all"
             >
               <MessageCircle className="w-4 h-4 fill-current" />
-              <span>Orçamento WhatsApp</span>
+              <span>Orçar Projeto</span>
             </a>
-          </div>
-        </div>
-
-        {/* Filter Chips Bar */}
-        <div className="bg-[#141211] border-t border-stone-800/60 px-4 sm:px-6 lg:px-8 py-2.5 overflow-x-auto scrollbar-none">
-          <div className="max-w-7xl mx-auto flex items-center gap-2">
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${
-                  activeCategory === cat.id
-                    ? "bg-[#C28839] text-white shadow-sm scale-105"
-                    : "bg-stone-800/80 text-stone-300 hover:bg-stone-700 border border-stone-700/60"
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
           </div>
         </div>
       </header>
 
-      {/* Main Content Area */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow w-full">
-        {/* Gallery Intro */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8 pb-6 border-b border-[#E6DFD5]">
+      {/* Main Content */}
+      <main className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Hero Banner */}
+        <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#C28839] uppercase tracking-wider mb-1">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-[#C28839] text-xs font-bold uppercase tracking-wider mb-3">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Acervo de Ambientes Executados</span>
+              <span>Acervo Oficial Monassi • Indaiatuba, Salto e Itu</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-serif font-bold text-[#1C1917]">
-              Móveis Sob Medida em Indaiatuba
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#1C1917] tracking-tight">
+              Galeria de Ambientes Planejados
             </h1>
-            <p className="text-stone-600 text-xs sm:text-sm font-light mt-1">
-              Clique em qualquer foto para abrir o visualizador de alta resolução, navegar com as setas do teclado e ver especificações.
+            <p className="text-stone-600 text-sm sm:text-base font-light mt-2 max-w-2xl">
+              Confira nossos projetos entregues. Nos posts vindos do{" "}
+              <strong className="font-semibold text-[#1C1917]">
+                Instagram (@monassiplanejados)
+              </strong>
+              , navegue pelo carrossel para ver todas as fotos do mesmo móvel.
             </p>
           </div>
-
-          <button
-            onClick={handleShare}
-            className="text-xs font-semibold text-stone-600 hover:text-stone-900 bg-white border border-[#E6DFD5] px-3.5 py-2 rounded-full flex items-center gap-1.5 shadow-2xs hover:bg-stone-50 transition-colors cursor-pointer"
-          >
-            {copied ? (
-              <>
-                <Check className="w-3.5 h-3.5 text-emerald-600" />
-                <span className="text-emerald-700">Link Copiado!</span>
-              </>
-            ) : (
-              <>
-                <Share2 className="w-3.5 h-3.5" />
-                <span>Compartilhar Galeria</span>
-              </>
-            )}
-          </button>
         </div>
 
-        {/* Photos Grid - Apple / Google Photos Aesthetic */}
-        <div
-          className={`grid gap-4 sm:gap-6 ${
-            gridSize === "compact"
-              ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-4"
-              : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-          }`}
-        >
-          {filteredItems.map((item, index) => (
-            <div
-              key={item.id}
-              onClick={() => setSelectedIndex(index)}
-              className="group relative bg-white rounded-2xl overflow-hidden border border-[#E6DFD5] shadow-sm hover:shadow-2xl transition-all duration-300 cursor-pointer flex flex-col"
-            >
-              {/* Photo Box */}
-              <div
-                className={`relative w-full overflow-hidden bg-stone-200 ${
-                  gridSize === "compact" ? "h-48 sm:h-56" : "h-64 sm:h-72"
+        {/* Filter Pills */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8 no-scrollbar">
+          {PROJECT_CATEGORIES.map((category) => {
+            const count =
+              category === "Todos"
+                ? PROJECTS_DATA.length
+                : PROJECTS_DATA.filter((p) => p.category === category).length;
+
+            return (
+              <button
+                key={category}
+                type="button"
+                onClick={() => {
+                  setActiveCategory(category);
+                  void trackClick({
+                    event: "gallery_filter",
+                    label: category,
+                    section: "full_gallery",
+                  });
+                }}
+                className={`px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer ${
+                  activeCategory === category
+                    ? "bg-[#1C1917] text-white shadow-md"
+                    : "bg-white text-stone-600 border border-[#E6DFD5] hover:border-[#C28839]"
                 }`}
               >
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
+                <span>{category}</span>
+                <span
+                  className={`text-[11px] px-2 py-0.5 rounded-full ${
+                    activeCategory === category
+                      ? "bg-[#C28839] text-white"
+                      : "bg-stone-100 text-stone-500"
+                  }`}
+                >
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
 
-                {/* Ambient dark gradient on hover */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-between p-4">
-                  <span className="text-white text-xs font-semibold flex items-center gap-1 bg-[#C28839] px-2.5 py-1 rounded-full shadow-md">
-                    <Maximize2 className="w-3 h-3" /> Ampliar
-                  </span>
+        {/* Projects Grid */}
+        <div
+          className={`grid gap-7 ${
+            gridSize === "large"
+              ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+              : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+          }`}
+        >
+          {filteredProjects.map((project) => {
+            const currentIdx = getCardSlide(project.id);
+            const currentSlide = project.slides[currentIdx] || project.slides[0];
+            const totalSlides = project.slides.length;
+            const hasCarousel = totalSlides > 1;
+
+            return (
+              <article
+                key={project.id}
+                role="button"
+                tabIndex={0}
+                onClick={() => openModal(project)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    openModal(project);
+                  }
+                }}
+                className="bg-white rounded-3xl overflow-hidden border border-[#E6DFD5] shadow-xs hover:shadow-2xl transition-all duration-500 group flex flex-col cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#C28839]"
+              >
+                {/* Image / Instagram Carousel Viewport */}
+                <div className="relative h-64 sm:h-72 w-full bg-stone-900 overflow-hidden">
+                  <Image
+                    src={currentSlide.src}
+                    alt={`${project.title} - Foto ${currentIdx + 1}`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+
+                  {/* Top Badges */}
+                  <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between gap-2 pointer-events-none">
+                    <span className="bg-black/75 text-white text-[11px] font-medium px-3 py-1 rounded-full backdrop-blur-md">
+                      {project.category}
+                    </span>
+                    {hasCarousel && (
+                      <span className="bg-[#C28839] text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow-sm flex items-center gap-1">
+                        <Images className="w-3 h-3" />
+                        {currentIdx + 1}/{totalSlides} fotos
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Prev / Next Arrows ONLY for Instagram Carousels */}
+                  {hasCarousel && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={(e) => stepCardSlide(e, project, -1)}
+                        aria-label="Foto anterior"
+                        className="absolute left-2.5 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-black/65 hover:bg-black text-white flex items-center justify-center transition-all cursor-pointer shadow-md"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(e) => stepCardSlide(e, project, 1)}
+                        aria-label="Próxima foto"
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-black/65 hover:bg-black text-white flex items-center justify-center transition-all cursor-pointer shadow-md"
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </>
+                  )}
+
+                  {/* Bottom Bar */}
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/35 to-transparent p-4 pt-8 flex items-center justify-between">
+                    {hasCarousel ? (
+                      <div className="flex items-center gap-1.5">
+                        {project.slides.map((_, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setCardSlideIndex((prev) => ({
+                                ...prev,
+                                [project.id]: idx,
+                              }));
+                            }}
+                            aria-label={`Ver foto ${idx + 1}`}
+                            className={`h-1.5 rounded-full transition-all cursor-pointer ${
+                              idx === currentIdx
+                                ? "w-5 bg-[#C28839]"
+                                : "w-1.5 bg-white/55 hover:bg-white"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="text-white/90 text-xs font-light truncate pr-2">
+                        {project.location}
+                      </span>
+                    )}
+                    <span className="text-[11px] font-semibold text-amber-300 flex items-center gap-1 shrink-0">
+                      <Maximize2 className="w-3 h-3" /> Ampliar
+                    </span>
+                  </div>
                 </div>
 
-                {/* Top Badge */}
-                <div className="absolute top-3 left-3">
-                  <span className="bg-[#1C1917]/80 text-stone-200 text-[11px] font-medium px-2.5 py-0.5 rounded-full backdrop-blur-md">
-                    {item.categoryLabel}
-                  </span>
-                </div>
-              </div>
+                {/* Card Body */}
+                <div className="p-6 flex flex-col flex-grow justify-between">
+                  <div>
+                    <div className="text-xs text-[#C28839] font-bold uppercase tracking-wider mb-1">
+                      {project.highlight}
+                    </div>
+                    <h2 className="text-lg sm:text-xl font-serif font-bold text-[#1C1917] mb-2 group-hover:text-[#C28839] transition-colors">
+                      {project.title}
+                    </h2>
+                    <p className="text-stone-600 text-sm font-light leading-relaxed line-clamp-2">
+                      {project.description}
+                    </p>
+                  </div>
 
-              {/* Photo Caption */}
-              <div className="p-4 sm:p-5 flex flex-col justify-between flex-grow">
-                <div>
-                  <h3 className="font-serif font-bold text-[#1C1917] text-base group-hover:text-[#C28839] transition-colors leading-snug line-clamp-1">
-                    {item.title}
-                  </h3>
-                  <p className="text-stone-500 text-xs font-light mt-1 line-clamp-2 leading-relaxed">
-                    {item.description}
-                  </p>
+                  {/* Mini Thumbnail Strip ONLY for Instagram Carousels */}
+                  {hasCarousel ? (
+                    <div className="mt-4 pt-4 border-t border-stone-100 flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+                        {project.slides.map((s, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setCardSlideIndex((prev) => ({
+                                ...prev,
+                                [project.id]: idx,
+                              }));
+                            }}
+                            className={`relative w-9 h-7 rounded-md overflow-hidden border transition-all shrink-0 cursor-pointer ${
+                              idx === currentIdx
+                                ? "border-[#C28839] scale-105"
+                                : "border-transparent opacity-60 hover:opacity-100"
+                            }`}
+                          >
+                            <Image
+                              src={s.src}
+                              alt={s.caption}
+                              fill
+                              sizes="36px"
+                              className="object-cover"
+                            />
+                          </button>
+                        ))}
+                      </div>
+                      <span className="text-xs font-semibold text-[#C28839] shrink-0">
+                        {totalSlides} fotos
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="mt-4 pt-4 border-t border-stone-100 flex items-center justify-between">
+                      <span className="text-xs font-semibold text-stone-500 group-hover:text-[#1C1917] transition-colors">
+                        Ver especificações
+                      </span>
+                      <ChevronRight className="w-4 h-4 text-[#C28839] transition-transform group-hover:translate-x-1" />
+                    </div>
+                  )}
                 </div>
-
-                <div className="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-400">
-                  <span className="flex items-center gap-1">
-                    <MapPin className="w-3 h-3 text-[#C28839]" /> {item.location}
-                  </span>
-                  <span className="font-medium text-[#C28839]">Ver detalhes →</span>
-                </div>
-              </div>
-            </div>
-          ))}
+              </article>
+            );
+          })}
         </div>
       </main>
 
-      {/* Fullscreen Photos App Lightbox Modal */}
-      {selectedItem && selectedIndex !== null && (
-        <div className="fixed inset-0 z-50 bg-[#0c0a09]/95 backdrop-blur-md flex flex-col justify-between text-white animate-fade-in select-none">
-          {/* Lightbox Top Navigation Bar */}
-          <div className="flex items-center justify-between px-4 sm:px-8 py-4 bg-[#141211]/80 border-b border-stone-800">
-            <div className="flex items-center gap-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#C28839] bg-stone-900 px-3 py-1 rounded-full border border-stone-800">
-                {selectedIndex + 1} de {filteredItems.length}
-              </span>
-              <span className="text-stone-300 text-xs hidden sm:inline-block">
-                {selectedItem.categoryLabel}
-              </span>
+      {/* Lightbox Modal (No MDF catalog button) */}
+      {selectedProject && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={selectedProject.title}
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
+          onClick={() => setSelectedProject(null)}
+        >
+          <div
+            className="bg-white rounded-3xl max-w-5xl w-full overflow-hidden shadow-2xl border border-stone-200 my-auto grid grid-cols-1 lg:grid-cols-12"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Left/Top: Photo Viewer (7 cols) */}
+            <div className="lg:col-span-7 bg-stone-950 flex flex-col justify-between relative">
+              <div className="relative h-80 sm:h-[460px] w-full">
+                <Image
+                  src={
+                    selectedProject.slides[modalSlideIndex]?.src ||
+                    selectedProject.slides[0].src
+                  }
+                  alt={`${selectedProject.title} - Foto ${modalSlideIndex + 1}`}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 600px"
+                  className="object-contain"
+                />
+
+                {selectedProject.slides.length > 1 && (
+                  <>
+                    <div className="absolute top-4 left-4 bg-black/75 text-white text-xs font-semibold px-3.5 py-1.5 rounded-full backdrop-blur-md">
+                      Foto {modalSlideIndex + 1} de {selectedProject.slides.length}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => stepModalSlide(-1)}
+                      aria-label="Foto anterior"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-black/70 hover:bg-[#C28839] text-white flex items-center justify-center transition-colors cursor-pointer"
+                    >
+                      <ChevronLeft className="w-6 h-6" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => stepModalSlide(1)}
+                      aria-label="Próxima foto"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-black/70 hover:bg-[#C28839] text-white flex items-center justify-center transition-colors cursor-pointer"
+                    >
+                      <ChevronRight className="w-6 h-6" />
+                    </button>
+                  </>
+                )}
+
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent px-5 py-3.5">
+                  <p className="text-white text-xs sm:text-sm font-medium">
+                    {selectedProject.slides[modalSlideIndex]?.caption}
+                  </p>
+                </div>
+              </div>
+
+              {/* Thumbnails ONLY for Instagram Carousel posts */}
+              {selectedProject.slides.length > 1 && (
+                <div className="bg-stone-900 p-3.5 flex items-center gap-2.5 overflow-x-auto border-t border-stone-800">
+                  {selectedProject.slides.map((slide, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setModalSlideIndex(idx)}
+                      className={`relative w-16 h-12 rounded-lg overflow-hidden shrink-0 border-2 transition-all cursor-pointer ${
+                        idx === modalSlideIndex
+                          ? "border-[#C28839] scale-105"
+                          : "border-transparent opacity-55 hover:opacity-100"
+                      }`}
+                    >
+                      <Image
+                        src={slide.src}
+                        alt={slide.caption}
+                        fill
+                        sizes="64px"
+                        className="object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
-            <div className="flex items-center gap-2">
-              <a
-                href={`https://wa.me/5519994432077?text=Ol%C3%A1!%20Vi%20a%20foto%20"${encodeURIComponent(
-                  selectedItem.title
-                )}"%20na%20galeria%20e%20gostaria%20de%20um%20or%C3%A7amento.`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-[#C28839] hover:bg-[#A77129] text-white text-xs font-semibold px-4 py-2 rounded-full flex items-center gap-1.5 shadow-md transition-all"
-              >
-                <MessageCircle className="w-3.5 h-3.5 fill-current" />
-                <span className="hidden sm:inline">Pedir Orçamento Desta Foto</span>
-                <span className="sm:hidden">Orçamento</span>
-              </a>
-
+            {/* Right/Bottom: Project Specs & Conversion (5 cols) */}
+            <div className="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-white relative">
               <button
-                onClick={() => setSelectedIndex(null)}
-                className="bg-stone-800 hover:bg-stone-700 text-white p-2 rounded-full transition-colors cursor-pointer"
-                aria-label="Fechar visualizador"
+                type="button"
+                onClick={() => setSelectedProject(null)}
+                aria-label="Fechar"
+                className="absolute top-4 right-4 bg-stone-100 hover:bg-stone-200 text-stone-700 p-2 rounded-full transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
-            </div>
-          </div>
 
-          {/* Main Photo View with Side Arrows */}
-          <div className="relative flex-grow flex items-center justify-center p-4 sm:p-8 overflow-hidden">
-            {/* Previous Button */}
-            <button
-              onClick={() =>
-                setSelectedIndex(
-                  selectedIndex > 0 ? selectedIndex - 1 : filteredItems.length - 1
-                )
-              }
-              className="absolute left-4 sm:left-8 z-20 bg-stone-900/80 hover:bg-[#C28839] text-white p-3 rounded-full border border-stone-700 shadow-xl transition-all hover:scale-110 cursor-pointer"
-              aria-label="Foto anterior"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-
-            {/* Next Button */}
-            <button
-              onClick={() =>
-                setSelectedIndex(
-                  selectedIndex < filteredItems.length - 1 ? selectedIndex + 1 : 0
-                )
-              }
-              className="absolute right-4 sm:right-8 z-20 bg-stone-900/80 hover:bg-[#C28839] text-white p-3 rounded-full border border-stone-700 shadow-xl transition-all hover:scale-110 cursor-pointer"
-              aria-label="Próxima foto"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
-
-            {/* Central Photo */}
-            <div className="relative h-full w-full max-h-[60vh] sm:max-h-[68vh] max-w-5xl flex items-center justify-center">
-              <Image
-                src={selectedItem.image}
-                alt={selectedItem.title}
-                fill
-                className="object-contain drop-shadow-2xl"
-                priority
-              />
-            </div>
-          </div>
-
-          {/* Bottom Info & Details Tray (iOS Photos Info Sheet style) */}
-          <div className="bg-[#141211] border-t border-stone-800 p-4 sm:p-6">
-            <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-              <div className="max-w-2xl">
-                <div className="flex items-center gap-3 text-xs text-[#C28839] mb-1 font-semibold">
-                  <span className="flex items-center gap-1">
-                    <MapPin className="w-3.5 h-3.5" /> {selectedItem.location}
-                  </span>
+              <div>
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#C28839] mb-2">
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>{selectedProject.location}</span>
                   <span>•</span>
-                  <span className="flex items-center gap-1">
-                    <Calendar className="w-3.5 h-3.5" /> {selectedItem.year}
-                  </span>
-                  <span>•</span>
-                  <span className="text-stone-400 font-normal">{selectedItem.materials}</span>
+                  <span>{selectedProject.category}</span>
                 </div>
-                <h2 className="text-lg sm:text-xl font-serif font-bold text-white leading-tight">
-                  {selectedItem.title}
+
+                <h2 className="text-2xl font-serif font-bold text-[#1C1917] mb-3 pr-8">
+                  {selectedProject.title}
                 </h2>
-                <p className="text-stone-300 text-xs sm:text-sm font-light mt-1">
-                  {selectedItem.description}
+
+                <p className="text-stone-600 text-sm leading-relaxed font-light mb-5">
+                  {selectedProject.description}
                 </p>
+
+                <div className="bg-[#FAF8F5] p-4 rounded-2xl border border-[#E6DFD5] mb-5">
+                  <div className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2.5">
+                    Especificações do Projeto
+                  </div>
+                  <ul className="space-y-2">
+                    {selectedProject.specs.map((spec, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-2 text-xs sm:text-sm text-stone-700"
+                      >
+                        <CheckCircle2 className="w-4 h-4 text-[#C28839] shrink-0 mt-0.5" />
+                        <span>{spec}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
 
-              <div className="flex items-center gap-3 shrink-0 w-full md:w-auto">
+              <div className="space-y-3 pt-4 border-t border-stone-100">
                 <a
-                  href={`https://wa.me/5519994432077?text=Ol%C3%A1!%20Gostei%20do%20projeto%20"${encodeURIComponent(
-                    selectedItem.title
-                  )}"%20e%20gostaria%20de%20saber%20valores.`}
+                  href={`https://wa.me/5519994432077?text=Ol%C3%A1!%20Vi%20o%20projeto%20"${encodeURIComponent(
+                    selectedProject.title
+                  )}"%20na%20galeria%20da%20Monassi%20e%20quero%20solicitar%20um%20or%C3%A7amento!`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full md:w-auto bg-[#C28839] hover:bg-[#A77129] text-white text-xs sm:text-sm font-semibold px-6 py-3 rounded-full flex items-center justify-center gap-2 shadow-lg transition-all"
+                  onClick={() =>
+                    void trackClick({
+                      event: "whatsapp_click",
+                      label: `Orçar da Galeria: ${selectedProject.title}`,
+                      section: "full_gallery_modal",
+                    })
+                  }
+                  className="w-full bg-[#C28839] hover:bg-[#A77129] text-white py-3.5 px-5 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-md transition-all text-sm"
                 >
                   <MessageCircle className="w-4 h-4 fill-current" />
-                  <span>Solicitar Orçamento</span>
+                  <span>Orçar Projeto Semelhante no WhatsApp</span>
                 </a>
+
+                <button
+                  type="button"
+                  onClick={handleShare}
+                  className="w-full py-2.5 px-4 rounded-xl border border-stone-200 hover:bg-stone-50 text-xs font-semibold text-stone-600 flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>Link Copiado</span>
+                    </>
+                  ) : (
+                    <>
+                      <Share2 className="w-3.5 h-3.5" />
+                      <span>Compartilhar Projeto</span>
+                    </>
+                  )}
+                </button>
               </div>
             </div>
           </div>
         </div>
       )}
-
-      {/* Footer for Gallery Page */}
-      <footer className="bg-[#141211] text-stone-400 text-xs border-t border-stone-800 py-8 px-4 text-center">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>© {new Date().getFullYear()} Monassi Móveis Planejados • Indaiatuba - SP</p>
-          <div className="flex items-center gap-4 text-stone-300">
-            <a href="tel:+5519994432077" className="hover:text-[#C28839] flex items-center gap-1">
-              <Phone className="w-3.5 h-3.5" /> (19) 99443-2077
-            </a>
-            <span>•</span>
-            <Link href="/" className="hover:text-[#C28839]">
-              Voltar ao Site Principal
-            </Link>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
